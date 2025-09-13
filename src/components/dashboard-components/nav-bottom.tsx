@@ -16,9 +16,9 @@ export const NavBotton = ({ href, isActive,  label }: Props) => {
     <Button
       asChild
       className={cn(
-        "w-full lg:w-auto justify-between font-normal  px-5 hover:bg-accent-foreground/15 hover:text-accent-foreground border-none focus-visible:ring-offset-0 transition-all ease-in  ",
+        "w-full lg:w-auto justify-between font-normal  px-5 hover:bg-accent-foreground/5 hover:text-accent-foreground border-none focus-visible:ring-offset-0 transition-all ease-in   ",
         isActive &&
-          " !bg-accent-foreground/20 text-accent-foreground hover:text-primary backdrop-blur-2xl border border-accent-foreground/50"
+          " !bg-accent-foreground/10 text-accent-foreground hover:text-primary backdrop-blur-2xl border border-accent-foreground/50"
       )}
       size={"sm"}
       variant={"outline"}

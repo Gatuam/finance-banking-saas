@@ -10,8 +10,8 @@ export const WelcomeMessage = () => {
         Welcome Back {isLoaded ? ", " : " "}
         {<span className=" text-chart-2">{user?.fullName}</span>}
       </h2>
-      <p className=" tracking-wide lg:text-base text-accent-foreground text-xs">
-        This is your income report!
+      <p className=" tracking-wide lg:text-sm text-accent-foreground text-sm">
+        This is your monthly income report!
       </p>
     </div>
   );
