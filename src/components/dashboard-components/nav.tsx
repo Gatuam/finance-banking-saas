@@ -16,6 +16,7 @@ import { Button } from "../ui/button";
 import { Menu } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
+import { cn } from "@/lib/utils";
 
 export const Nav = () => {
   const pathname = usePathname();
@@ -67,7 +68,10 @@ export const Nav = () => {
                 onClick={() => onClick(route.herf)}
                 variant={route.herf === pathname ? "secondary" : "ghost"}
                 key={route.label}
-                className=" w-full !bg-none flex items-center justify-start !hover:bg-accent-foreground/10 mb-1 "
+                className={cn(
+                  " w-full flex items-center justify-start !hover:bg-accent-foreground/25 mb-1",
+                route.herf === pathname && 'border'
+                )}
               >
                 <Link href={route.herf}>{route.label}</Link>
               </Button>

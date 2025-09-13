@@ -3,7 +3,8 @@ import { Poppins } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/provider/theme-provider";
 import { ClerkProvider } from "@clerk/nextjs";
-import { dark } from '@clerk/themes'
+import { dark } from "@clerk/themes";
+import { QueryProviders } from "@/provider/query-provider";
 
 const poppins = Poppins({
   variable: "--font-poppins",
@@ -22,9 +23,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <ClerkProvider appearance={{
-       baseTheme: dark,
-    }}>
+    <ClerkProvider
+      appearance={{
+        baseTheme: dark,
+      }}
+    >
       <html lang="en" suppressHydrationWarning>
         <body className={`${poppins.variable} antialiased`}>
           <ThemeProvider
@@ -33,7 +36,7 @@ export default function RootLayout({
             enableSystem
             disableTransitionOnChange
           >
-            {children}
+            <QueryProviders>{children}</QueryProviders>
           </ThemeProvider>
         </body>
       </html>
