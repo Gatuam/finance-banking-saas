@@ -2,32 +2,20 @@ import { Hono } from "hono";
 import { handle } from "hono/vercel";
 import * as z from "zod";
 import { zValidator } from "@hono/zod-validator";
+import { clerkMiddleware, getAuth } from "@hono/clerk-auth";
+import { error } from "console";
 
 const app = new Hono().basePath("/api");
 
-app
-  .get("/hello", (c) => {
-    return c.json({
-      message: "Hello Next.js!",
-    });
-  })
-  .get(
-    "/hello/:hi",
-    zValidator(
-      "param",
-      z.object({
-        hi: z.string(),
-      })
-    ),
-    (c) => {
-      const text = c.req.valid("param");
-
-      return c.json({
-        message: "Lee",
-        text: text,
-      });
-    }
-  );
+app.get("/hello", clerkMiddleware(), (c) => {
+  const auth = getAuth(c);
+  if (!auth?.userId) {
+    return c.json({ error: "Unauthorzied" });
+  }
+  return c.json({
+    message: "Hello Next.js!",
+  });
+});
 
 export const GET = handle(app);
 export const POST = handle(app);
