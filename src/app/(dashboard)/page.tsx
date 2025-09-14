@@ -1,10 +1,14 @@
-import { UserButton } from "@clerk/nextjs";
-import Image from "next/image";
+'use client'
+import { Button } from "@/components/ui/button";
+import { useNewAccount } from "@/features/accounts/hooks/use-newaccount";
 
 export default function Home() {
+    const {onOpen} = useNewAccount();
   return (
     <div>
-      <UserButton />
+      <Button onClick={onOpen}>
+        Open
+      </Button>
     </div>
   );
 }

@@ -5,6 +5,8 @@ import { ThemeProvider } from "@/provider/theme-provider";
 import { ClerkProvider } from "@clerk/nextjs";
 import { dark } from "@clerk/themes";
 import { QueryProviders } from "@/provider/query-provider";
+import { SheetProvider } from "@/provider/sheet-provider";
+import { Toaster } from "sonner";
 
 const poppins = Poppins({
   variable: "--font-poppins",
@@ -36,7 +38,11 @@ export default function RootLayout({
             enableSystem
             disableTransitionOnChange
           >
-            <QueryProviders>{children}</QueryProviders>
+            <QueryProviders>
+              <SheetProvider />
+              {children}
+              <Toaster/>
+              </QueryProviders>
           </ThemeProvider>
         </body>
       </html>

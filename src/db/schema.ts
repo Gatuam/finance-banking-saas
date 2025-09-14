@@ -1,5 +1,7 @@
 
+import { createId } from "@paralleldrive/cuid2";
 import { integer, pgTable, text, varchar } from "drizzle-orm/pg-core";
+import {createInsertSchema} from 'drizzle-zod'
 
 export const usersTable = pgTable("users", {
   id: integer().primaryKey().generatedAlwaysAsIdentity(),
@@ -10,8 +12,10 @@ export const usersTable = pgTable("users", {
 
 
 export const account = pgTable('account', {
-    id: text('id').primaryKey(),
+    id: text('id').primaryKey().$defaultFn(()=> createId()),
     plaidId: text('plaid_id'),
     name: text('name').notNull(),
     userId: text('user_id').notNull(),
 })
+
+export const insertAccountSchema = createInsertSchema(account)

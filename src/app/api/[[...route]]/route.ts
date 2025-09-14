@@ -2,17 +2,8 @@ import { Hono } from "hono";
 import { handle } from "hono/vercel";
 import * as z from "zod";
 import accounts from "./accounts";
-import { HTTPException } from "hono/http-exception";
 
 const app = new Hono().basePath("/api");
-
-app.onError((err, c) => {
-  if (err instanceof HTTPException) {
-    return err.getResponse();
-  }
-
-  return c.json({ error: "Internal error" });
-});
 
 const routes = app.route("/accounts", accounts);
 
