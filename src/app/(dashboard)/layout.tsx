@@ -5,7 +5,7 @@ const layout = ({children}: {children : React.ReactNode}) => {
   return (
     <>
     <Headrer/>
-    <main className='px-3 lg:px-14'>
+    <main className='px-3 lg:px-14 py-3'>
       {children}
     </main> 
     </>
