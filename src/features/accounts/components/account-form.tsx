@@ -14,11 +14,10 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { insertAccountSchema } from "@/db/schema";
 import { Trash } from "lucide-react";
 
-const formSchema = insertAccountSchema.pick({
-  name: true,
+const formSchema = z.object({
+  name: z.string().min(1, { message: "Name is required" }),
 });
 
 type FormValue = z.input<typeof formSchema>;
@@ -31,13 +30,7 @@ type Props = {
   disable: boolean;
 };
 
-export const AccountForm = ({
-  disable,
-  onSubmit,
-  id,
-  onDelete,
-}: Props) => {
-  
+export const AccountForm = ({ disable, onSubmit, id, onDelete }: Props) => {
   const form = useForm<FormValue>({
     resolver: zodResolver(formSchema),
     defaultValues: {

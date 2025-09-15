@@ -2,9 +2,10 @@ import { db } from "@/db";
 import { account, insertAccountSchema } from "@/db/schema";
 import { Hono } from "hono";
 import { clerkMiddleware, getAuth } from "@hono/clerk-auth";
-import { eq } from "drizzle-orm";
+import { and, eq, inArray } from "drizzle-orm";
 import { zValidator } from "@hono/zod-validator";
 import { currentUser } from "@clerk/nextjs/server";
+import * as z from "zod";
 
 const app = new Hono()
   .get("/", clerkMiddleware(), async (c) => {
@@ -47,6 +48,35 @@ const app = new Hono()
       } catch (err: any) {
         console.error("POST /accounts error:", err);
         return c.json({ error: err.message || "Server error" }, 500);
+      }
+    }
+  )
+  .post(
+    "/bulik-delete",
+    zValidator(
+      "json",
+      z.object({
+        ids: z.array(z.string()),
+      })
+    ),
+    async (c) => {
+      try {
+        const user = await currentUser();
+        const values = c.req.valid("json");
+        if (!user) {
+          return c.json({ error: "Unauthorized" }, 401);
+        }
+        const data = await db
+          .delete(account)
+          .where(
+            and(eq(account.userId, user?.id), inArray(account.id, values.ids))
+          )
+          .returning({
+            id: account.id,
+          });
+        return c.json( data );
+      } catch (error: any) {
+        return c.json({ error: error?.message || "Server error" }, 500);
       }
     }
   );

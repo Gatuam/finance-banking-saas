@@ -3,6 +3,7 @@ import * as React from "react";
 import {
   ColumnDef,
   ColumnFiltersState,
+  Row,
   SortingState,
   VisibilityState,
   flexRender,
@@ -36,12 +37,16 @@ interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
   filterKey: string;
+  onDelete: (rows: Row<TData>[]) => void;
+  disable: boolean;
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
   filterKey,
+  onDelete,
+  disable,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
 
@@ -76,7 +81,7 @@ export function DataTable<TData, TValue>({
   return (
     <div>
       <div className="flex items-center py-4 gap-x-2">
-       
+        {
           <Input
             placeholder={`Filetr ${filterKey}`}
             value={
@@ -87,14 +92,22 @@ export function DataTable<TData, TValue>({
             }
             className="max-w-sm"
           />
-          {table.getFilteredSelectedRowModel().rows.length > 0 && (
-            <Button className=" flex items-center justify-center gap-0.5" variant={"destructive"}>
-             <Trash className=" size-4"/> 
-              Delete{', '}
-              {table.getFilteredRowModel().rows.length}
-              </Button>
-          )}
-
+        }
+        {table.getFilteredSelectedRowModel().rows.length > 0 && (
+          <Button
+            onClick={() => {
+              onDelete(table.getFilteredRowModel().rows);
+              table.resetRowSelection();
+            }}
+            disabled={disable}
+            className=" flex items-center justify-center gap-0.5"
+            variant={"destructive"}
+          >
+            <Trash className=" size-4" />
+            Delete{", "}
+            {table.getFilteredRowModel().rows.length}
+          </Button>
+        )}
 
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
