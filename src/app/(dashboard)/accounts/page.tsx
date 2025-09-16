@@ -35,7 +35,7 @@ const Page = () => {
             <Skeleton className=" h-8 w-48" />
           </CardHeader>
           <CardContent>
-            <div className=" flex items-center justify-between">
+            <div className=" flex items-center justify-between gap-2">
               <Skeleton className=" h-8 w-96" />
               <Skeleton className=" h-8 w-48" />
             </div>
