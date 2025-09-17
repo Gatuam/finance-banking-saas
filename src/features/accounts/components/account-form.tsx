@@ -16,6 +16,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Trash } from "lucide-react";
 
+
 const formSchema = z.object({
   name: z.string().min(1, { message: "Name is required" }),
 });
@@ -30,17 +31,19 @@ type Props = {
   disable: boolean;
 };
 
-export const AccountForm = ({ disable, onSubmit, id, onDelete , defaultValues }: Props) => {
+export const AccountForm = ({
+  disable,
+  onSubmit,
+  id,
+  onDelete,
+  defaultValues,
+}: Props) => {
   const form = useForm<FormValue>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: defaultValues?.name || "",
     },
   });
-
-  const handleDelete = (values: FormValue) => {
-    onDelete?.();
-  };
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
@@ -68,6 +71,7 @@ export const AccountForm = ({ disable, onSubmit, id, onDelete , defaultValues }:
           </Button>
           {!!id && (
             <Button
+              onClick={onDelete}
               variant={"outline"}
               disabled={disable}
               className=" w-full"

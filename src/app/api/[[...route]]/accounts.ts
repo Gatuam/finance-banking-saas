@@ -6,6 +6,7 @@ import { and, eq, inArray } from "drizzle-orm";
 import { zValidator } from "@hono/zod-validator";
 import { currentUser } from "@clerk/nextjs/server";
 import * as z from "zod";
+import { error } from "console";
 
 const app = new Hono()
   .get("/", clerkMiddleware(), async (c) => {
@@ -110,5 +111,69 @@ const app = new Hono()
       }
     }
   )
+  .patch(
+    "/:id",
+    zValidator(
+      "param",
+      z.object({
+        id: z.string().optional(),
+      })
+    ),
+    zValidator(
+      "json",
+      z.object({
+        name: z.string().optional(),
+      })
+    ),
+    async (c) => {
+      const user = await currentUser();
+      const { id } = c.req.valid("param");
+      const values = c.req.valid("json");
+      if (!user?.id || !user) {
+        return c.json({ error: "Unauthorized" }, 401);
+      }
+      if (!id) {
+        return c.json({ error: "Missing id" }, 400);
+      }
+      const [data] = await db
+        .update(account)
+        .set(values)
+        .where(and(eq(account.userId, user?.id), eq(account.id, id)))
+        .returning();
+      if (!data) {
+        return c.json({ error: "Not Found" }, 401);
+      }
+      return c.json(data);
+    }
+  )
+  .delete(
+    "/:id",
+    zValidator(
+      "param",
+      z.object({
+        id: z.string().optional(),
+      })
+    ),
+    async (c) => {
+      const user = await currentUser();
+      const { id } = c.req.valid("param");
+      if (!user?.id || !user) {
+        return c.json({ error: "Unauthorized" }, 401);
+      }
+      if (!id) {
+        return c.json({ error: "Missing id" }, 400);
+      }
+      const [data] = await db
+        .delete(account)
+        .where(and(eq(account.userId, user?.id), eq(account.id, id)))
+        .returning({
+          id: account.id,
+        });
+      if (!data) {
+        return c.json({ error: "Not Found" }, 401);
+      }
+      return c.json(data);
+    }
+  );
 
 export default app;
