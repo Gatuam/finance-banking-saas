@@ -7,6 +7,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 
 import { InferResponseType } from "hono";
 import { client } from "@/lib/hono";
+import { Actions } from "./action";
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
 export type Payment = {
@@ -57,4 +58,8 @@ export const columns: ColumnDef<ResponseType>[] = [
       );
     },
   },
+  {
+    id: 'action',
+    cell: ({row})=>  <Actions id={row.original.id}/>
+  }
 ];

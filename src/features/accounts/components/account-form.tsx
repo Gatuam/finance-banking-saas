@@ -30,11 +30,11 @@ type Props = {
   disable: boolean;
 };
 
-export const AccountForm = ({ disable, onSubmit, id, onDelete }: Props) => {
+export const AccountForm = ({ disable, onSubmit, id, onDelete , defaultValues }: Props) => {
   const form = useForm<FormValue>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name: "",
+      name: defaultValues?.name || "",
     },
   });
 

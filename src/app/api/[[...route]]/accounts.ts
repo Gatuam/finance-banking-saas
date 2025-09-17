@@ -27,6 +27,36 @@ const app = new Hono()
       .where(eq(account.userId, auth.userId));
     return c.json({ data });
   })
+  .get(
+    "/:id",
+    zValidator(
+      "param",
+      z.object({
+        id: z.string().optional(),
+      })
+    ),
+    async (c) => {
+      const user = await currentUser();
+      const { id } = c.req.valid("param");
+      if (!id) {
+        return c.json({ error: "Bad Request Missing id" }, 400);
+      }
+      if (!user) {
+        return c.json({ error: "Unauthozrized" }, 401);
+      }
+      const [data] = await db
+        .select({
+          id: account.id,
+          name: account.name,
+        })
+        .from(account)
+        .where(and(eq(account.userId, user.id), eq(account.id, id)));
+      if (!data) {
+        return c.json({ error: "Not found" }, 404);
+      }
+      return c.json({ data });
+    }
+  )
   .post(
     "/",
     zValidator("json", insertAccountSchema.pick({ name: true })),
@@ -74,11 +104,11 @@ const app = new Hono()
           .returning({
             id: account.id,
           });
-        return c.json( data );
+        return c.json(data);
       } catch (error: any) {
         return c.json({ error: error?.message || "Server error" }, 500);
       }
     }
-  );
+  )
 
 export default app;

@@ -49,11 +49,10 @@ export function DataTable<TData, TValue>({
   onDelete,
   disable,
 }: DataTableProps<TData, TValue>) {
-
   const [ConfirmationDialog, confirm] = UseConfirm(
-    'Are you sure?',
-    'This will delete all the table!'
-  )
+    "Are you sure?",
+    "This will delete all the table!"
+  );
   const [sorting, setSorting] = React.useState<SortingState>([]);
 
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
@@ -85,7 +84,7 @@ export function DataTable<TData, TValue>({
 
   return (
     <div>
-      <ConfirmationDialog/>
+      <ConfirmationDialog />
       <div className="flex items-center py-4 gap-x-2">
         {
           <Input
@@ -101,10 +100,12 @@ export function DataTable<TData, TValue>({
         }
         {table.getFilteredSelectedRowModel().rows.length > 0 && (
           <Button
-            onClick={ async() => {
+            onClick={async () => {
               const ok = await confirm();
-              onDelete(table.getFilteredRowModel().rows);
-              table.resetRowSelection();
+              if (ok) {
+                onDelete(table.getFilteredRowModel().rows);
+                table.resetRowSelection();
+              }
             }}
             disabled={disable}
             className=" flex items-center justify-center gap-0.5"
