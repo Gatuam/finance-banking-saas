@@ -7,38 +7,41 @@ import {
   SheetHeader,
   SheetTitle,
 } from "@/components/ui/sheet";
-import { AccountForm } from "./account-form";
-import { insertAccountSchema } from "@/db/schema";
+
+import { insertCategoriesSchema } from "@/db/schema";
 import z from "zod";
-import { useOpenAccount } from "../hooks/use-open-account";
-import { useGetAccont } from "../api/use-get-account";
-import { useEditAccount } from "../api/use-edit-accont ";
-import { useDeleteAccount } from "../api/use-delete-account";
+import { toast } from "sonner";
+import { Loader } from "lucide-react";
 import { UseConfirm } from "@/hooks/use-confirm";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useGetCategory } from "../api/use-get-category";
+import { useEditCategory } from "../api/use-edit-categories ";
+import { useDeletCategory } from "../api/use-delete-categories";
+import { CategoryForm } from "./category-form";
+import { useOpenCategories } from "../hooks/use-open-categories";
 
-const formSchema = insertAccountSchema.pick({
+const formSchema = insertCategoriesSchema.pick({
   name: true,
 });
 
 type FormValue = z.input<typeof formSchema>;
 
-export const EditAccountSheet = () => {
+export const EditCategorySheet = () => {
   const [ConfirmDailog, confirm] = UseConfirm(
     "Are you sure?",
     "You ar eabout to delete the data!"
   );
   const [mouthed, setMounted] = useState(false);
-  const { isOpen, onClose, onOpen, id } = useOpenAccount();
+  const { isOpen, onClose, onOpen, id } = useOpenCategories();
 
-  const accountQuery = useGetAccont(id);
-  const isLoading = accountQuery.isLoading;
-  const editMutation = useEditAccount(id);
-  const deleteMutation = useDeleteAccount(id);
+  const categoryQuery = useGetCategory(id);
+  const isLoading = categoryQuery.isLoading;
+  const editMutation = useEditCategory(id);
+  const deleteMutation = useDeletCategory(id);
   const isPending = editMutation.isPending || deleteMutation.isPending;
-  const defaultValue = accountQuery.data
+  const defaultValue = categoryQuery.data
     ? {
-        name: accountQuery.data.name,
+        name: categoryQuery.data.name,
       }
     : {
         name: "",
@@ -75,9 +78,9 @@ export const EditAccountSheet = () => {
       <Sheet open={isOpen} onOpenChange={onClose}>
         <SheetContent className="w-[400px] sm:w-[540px]">
           <SheetHeader className=" flex flex-col items-center">
-            <SheetTitle>Edit Account</SheetTitle>
+            <SheetTitle>Edit Category</SheetTitle>
             <SheetDescription className="pb-3 text-center">
-              Edit Account details!
+              Edit category details!
             </SheetDescription>
             <div className=" px-2 pt-4 pb-4 border border-accent-foreground/10 rounded-md w-full">
               <div className=" gap-3 p-2 w-full">
@@ -94,7 +97,7 @@ export const EditAccountSheet = () => {
                   </div>
                 ) : (
                   <>
-                    <AccountForm
+                    <CategoryForm
                       id={id}
                       defaultValues={defaultValue}
                       onSubmit={onSubmit}
