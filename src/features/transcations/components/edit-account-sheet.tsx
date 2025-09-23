@@ -11,9 +11,9 @@ import { AccountForm } from "./account-form";
 import { insertAccountSchema } from "@/db/schema";
 import z from "zod";
 import { useOpenAccount } from "../hooks/use-open-account";
-import { useGetAccont } from "../api/use-get-account";
-import { useEditAccount } from "../api/use-edit-accont ";
-import { useDeleteAccount } from "../api/use-delete-account";
+import { useGetAccont } from "../api/use-get-transcation";
+import { useEditAccount } from "../api/use-edit-transaction ";
+import { useDeleteAccount } from "../api/use-delete-transcation";
 import { UseConfirm } from "@/hooks/use-confirm";
 import { Skeleton } from "@/components/ui/skeleton";
 

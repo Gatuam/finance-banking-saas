@@ -184,6 +184,40 @@ const app = new Hono()
       }
     }
   )
+  .post(
+    "/bulk-create",
+    zValidator(
+      "json",
+      z.array(
+        insertTransactionSchema.omit({
+          id: true,
+        })
+      )
+    ),
+    async (c) => {
+      try {
+        const user = await currentUser();
+        const values = c.req.valid("json");
+
+        if (!user) {
+          return c.json({ error: "Unauthorized" }, 401);
+        }
+
+        const data = await db
+          .insert(transcations)
+          .values(
+            values.map((value) => ({
+              ...value,
+            }))
+          )
+          .returning();
+
+        return c.json({ data });
+      } catch (error: any) {
+        return c.json({ error: error?.message || "Server error" }, 500);
+      }
+    }
+  )
   .patch(
     "/:id",
     zValidator(
