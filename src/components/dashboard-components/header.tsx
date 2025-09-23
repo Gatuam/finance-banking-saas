@@ -9,7 +9,7 @@ import { WelcomeMessage } from "./welcome-message";
 
 const Headrer = () => {
   return (
-    <header className=" bg-gradient-to-b from-accent/50 to-accent/20 backdrop-blur-2xl  px-4 py-6 lg:px-14 pb-36">
+    <header className=" bg-gradient-to-b from-chart-6/10 to-chart-6/2 backdrop-blur-sm  px-4 py-6 lg:px-14 pb-36 border-b border-chart-6/5 ">
       <div className="max-w-7xl mx-auto">
         <div className=" w-full flex items-center justify-between mb-14">
           <div className=" flex items-center lg:gap-x-16">
