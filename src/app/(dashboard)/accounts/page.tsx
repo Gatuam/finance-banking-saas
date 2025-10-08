@@ -55,8 +55,8 @@ const Page = () => {
   }
   return (
     <>
-      <div className="max-w-screen-2xl mx-auto w-full pb-10 -mt-35 ">
-        <Card className=" border-none border-0 drop-shadow-md">
+      <div className="max-w-screen-2xl mx-auto w-full pb-10 -mt-35  ">
+        <Card className=" border-none border-0 drop-shadow-md ">
           <CardHeader className="  gap-y-2 lg:flex lg:items-center lg:justify-between">
             <CardTitle className=" text-xl line-clamp-1 text-center">
               Account

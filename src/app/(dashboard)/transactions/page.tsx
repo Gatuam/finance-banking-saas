@@ -6,14 +6,14 @@ import { Loader, PlusIcon } from "lucide-react";
 import { columns } from "./columns";
 import { DataTable } from "@/components/global/data-table";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useBulkDeleteCategory } from "@/features/categories/api/use-bulk-delete";
 import { useGetCategories } from "@/features/categories/api/use-get-categories";
-import { useNewCategory } from "@/features/categories/hooks/use-newCategory";
+import { useNewtransaction } from "@/features/transcations/hooks/use-new-transaction";
+import { useBulkDeleteTrancations } from "@/features/transcations/api/use-bulk-delete";
 
 const Page = () => {
-  const { isOpen, onOpen, } = useNewCategory();
+  const { isOpen, onOpen } = useNewtransaction();
   const categoryQuery = useGetCategories();
-  const deleteCategory = useBulkDeleteCategory();
+  const deleteCategory = useBulkDeleteTrancations();
   const categories = categoryQuery.data || [];
 
   const isDisable = categoryQuery.isLoading || deleteCategory.isPaused;
@@ -51,12 +51,11 @@ const Page = () => {
         <Card className=" border-none border-0 drop-shadow-md">
           <CardHeader className="  gap-y-2 lg:flex lg:items-center lg:justify-between">
             <CardTitle className=" text-xl line-clamp-1 text-center">
-              Categories
+              Transcation History
             </CardTitle>
             <Button
               onClick={() => {
                 onOpen();
-                console.log("lee");
               }}
               className=" text-accent"
             >

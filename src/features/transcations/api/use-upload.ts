@@ -4,29 +4,29 @@ import { client } from "@/lib/hono";
 import { toast } from "sonner";
 
 type ResponseType = InferResponseType<
-  (typeof client.api.transcations)["bulik-delete"]["$post"]
+  (typeof client.api.transcations)["bulk-create"]["$post"]
 >;
 type RequestType = InferRequestType<
-  (typeof client.api.transcations)["bulik-delete"]["$post"]
+  (typeof client.api.transcations)["bulk-create"]["$post"]
 >;
 
-export const useBulkDeleteTrancations = () => {
+export const useBulkUploadTrancations = () => {
   const queryClient = useQueryClient();
 
   const mutation = useMutation<ResponseType, Error, RequestType>({
     mutationFn: async (ids) => {
-      const res = await client.api.transcations["bulik-delete"]["$post"](ids);
+      const res = await client.api.transcations["bulk-create"]["$post"](ids);
       if (!res.ok) {
-        throw new Error("Failed to delete bulk transcations");
+        throw new Error("Failed to upload bulk transcations");
       }
       return await res.json();
     },
     onSuccess: () => {
-      toast.success("Transcations are deleted!");
+      toast.success("Transcations are created!");
       queryClient.invalidateQueries({ queryKey: ["transcations"] });
     },
     onError: (error) => {
-      toast.error(error?.message || "Failed to delete transcations");
+      toast.error(error?.message || "Failed to upload transcations");
     },
   });
   return mutation;
