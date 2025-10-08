@@ -15,49 +15,128 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Trash } from "lucide-react";
-
+import { insertTransactionSchema } from "@/db/schema";
+import Select from "@/components/global/selected";
+import { DatePicker } from "@/components/global/date-picker";
+import { Textarea } from "@/components/ui/textarea";
+import AmountInput from "@/components/global/amount-input";
 
 const formSchema = z.object({
-  name: z.string().min(1, { message: "Name is required" }),
+  date: z.coerce.date(),
+  accountId: z.string(),
+  categoryId: z.string().nullable().optional(),
+  payee: z.string(),
+  amount: z.string(),
+  notes: z.string().nullable().optional(),
+});
+
+const apiSchema = insertTransactionSchema.omit({
+  id: true,
 });
 
 type FormValue = z.input<typeof formSchema>;
+type ApiFormValue = z.input<typeof apiSchema>;
 
 type Props = {
   id?: string;
   defaultValues?: FormValue;
-  onSubmit: (values: FormValue) => void;
+  onSubmit: (values: ApiFormValue) => void;
   onDelete?: () => void;
-  disable: boolean;
+  disable?: boolean;
+  accountOptions: { label: string; value: string }[];
+  categoryOptions: { label: string; value: string }[];
+  onCreateAccount: (name: string) => void;
+  onCreateCategory: (name: string) => void;
 };
 
-export const AccountForm = ({
+export const TranscationForm = ({
   disable,
   onSubmit,
   id,
   onDelete,
   defaultValues,
+  accountOptions,
+  categoryOptions,
+  onCreateAccount,
+  onCreateCategory,
 }: Props) => {
   const form = useForm<FormValue>({
     resolver: zodResolver(formSchema),
-    defaultValues: {
-      name: defaultValues?.name || "",
-    },
+    defaultValues: defaultValues,
   });
+  const handleSubmit = (values: FormValue) => {
+    console.log({ values });
+  };
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
+      <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-5">
         <FormField
           control={form.control}
-          name="name"
+          name="accountId"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Account Name</FormLabel>
+              <FormLabel>Date</FormLabel>
+              <FormControl>
+                <DatePicker
+                  value={field.value}
+                  disable={disable}
+                  onChange={field.onChange}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="accountId"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Account</FormLabel>
+              <FormControl>
+                <Select
+                  placeholder="selecte an account"
+                  options={accountOptions}
+                  onCreate={onCreateAccount}
+                  value={field.value}
+                  onChange={field.onChange}
+                  disable={disable}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="categoryId"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Category</FormLabel>
+              <FormControl>
+                <Select
+                  placeholder="selecte an account"
+                  options={categoryOptions}
+                  onCreate={onCreateCategory}
+                  value={field.value}
+                  onChange={field.onChange}
+                  disable={disable}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="payee"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Payee</FormLabel>
               <FormControl>
                 <Input
-                  className=" text-sm"
                   disabled={disable}
-                  placeholder="e.g cash, bank, CC"
+                  placeholder="Add a payee"
                   {...field}
                 />
               </FormControl>
@@ -65,6 +144,44 @@ export const AccountForm = ({
             </FormItem>
           )}
         />
+        <FormField
+          control={form.control}
+          name="amount"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Amount</FormLabel>
+              <FormControl>
+                <AmountInput
+                  value={field.value ?? ""}
+                  onValueChange={field.onChange}
+                  disable={disable}
+                  placeholder="0.00"
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="notes"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Note</FormLabel>
+              <FormControl>
+                <Textarea
+                  {...field}
+                  value={field.value ?? ""}
+                  disabled={disable}
+                  placeholder="Optinal notes"
+                  className=" resize-none h-25"
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
         <div className=" space-y-2">
           <Button disabled={disable} className=" w-full" type="submit">
             {id ? "Save Changes" : "Create account"}

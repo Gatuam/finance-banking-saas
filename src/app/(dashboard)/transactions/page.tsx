@@ -11,7 +11,7 @@ import { useNewtransaction } from "@/features/transcations/hooks/use-new-transac
 import { useBulkDeleteTrancations } from "@/features/transcations/api/use-bulk-delete";
 
 const Page = () => {
-  const { isOpen, onOpen, } = useNewtransaction();
+  const { isOpen, onOpen } = useNewtransaction();
   const categoryQuery = useGetCategories();
   const deleteCategory = useBulkDeleteTrancations();
   const categories = categoryQuery.data || [];
@@ -56,7 +56,6 @@ const Page = () => {
             <Button
               onClick={() => {
                 onOpen();
-                console.log("lee");
               }}
               className=" text-accent"
             >

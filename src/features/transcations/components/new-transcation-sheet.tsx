@@ -15,6 +15,8 @@ import { useCreateCategory } from "@/features/categories/api/use-create-category
 import { useGetCategories } from "@/features/categories/api/use-get-categories";
 import { useCreateAccount } from "@/features/accounts/api/use-create-accont";
 import { useGetAcconts } from "@/features/accounts/api/use-get-accounts";
+import { TranscationForm } from "./transcations-form";
+import { Loader } from "lucide-react";
 
 const formSchema = insertTransactionSchema.omit({
   id: true,
@@ -23,6 +25,7 @@ const formSchema = insertTransactionSchema.omit({
 type FormValue = z.input<typeof formSchema>;
 
 export const NewTranscationSheet = () => {
+  const { isOpen, onClose } = useNewtransaction();
   const categoryMutation = useCreateCategory();
   const categoryQuery = useGetCategories();
   const onCreateCategory = (name: string) =>
@@ -31,7 +34,7 @@ export const NewTranscationSheet = () => {
     });
 
   const categoryOptions = (categoryQuery.data ?? []).map((cat) => ({
-    lable: cat.name,
+    label: cat.name,
     value: cat.id,
   }));
 
@@ -43,11 +46,10 @@ export const NewTranscationSheet = () => {
     });
 
   const accountOptions = (accountQuery.data ?? []).map((cat) => ({
-    lable: cat.name,
+    label: cat.name,
     value: cat.id,
   }));
 
-  const { isOpen, onClose } = useNewtransaction();
   const mutation = useCreateTranscation();
   const onSubmit = (values: FormValue) => {
     mutation.mutate(values, {
@@ -58,6 +60,13 @@ export const NewTranscationSheet = () => {
     });
   };
 
+  const isPending =
+    mutation.isPending ||
+    categoryMutation.isPending ||
+    accountMutation.isPending;
+
+  const isLoading = categoryQuery.isLoading || accountQuery.isLoading;
+
   return (
     <Sheet open={isOpen} onOpenChange={onClose}>
       <SheetContent className="w-[400px] sm:w-[540px]">
@@ -67,7 +76,24 @@ export const NewTranscationSheet = () => {
             Create a new transaction!
           </SheetDescription>
           <div className=" px-2 pt-4 pb-4 border border-accent-foreground/10 rounded-md w-full">
-            <div className=" gap-3 p-2 w-full">form</div>
+            <div className=" gap-3 p-2 w-full">
+              {!isLoading ? (
+                <TranscationForm
+                  onSubmit={onSubmit}
+                  disable={isPending}
+                  onCreateAccount={onCreateAccount}
+                  accountOptions={accountOptions}
+                  onCreateCategory={onCreateCategory}
+                  categoryOptions={categoryOptions}
+                />
+              ) : (
+                <>
+                  <div className=" absolute inset-0 flex items-center justify-center">
+                    <Loader className=" size-4 animate-spin" />
+                  </div>
+                </>
+              )}
+            </div>
           </div>
         </SheetHeader>
       </SheetContent>
