@@ -20,9 +20,10 @@ import Select from "@/components/global/selected";
 import { DatePicker } from "@/components/global/date-picker";
 import { Textarea } from "@/components/ui/textarea";
 import AmountInput from "@/components/global/amount-input";
+import { convertAmountToMili } from "@/lib/utils";
 
 const formSchema = z.object({
-  date: z.coerce.date(),
+  date: z.date(),
   accountId: z.string(),
   categoryId: z.string().nullable().optional(),
   payee: z.string(),
@@ -65,14 +66,24 @@ export const TranscationForm = ({
     defaultValues: defaultValues,
   });
   const handleSubmit = (values: FormValue) => {
-    console.log({ values });
+    const amount = parseFloat(values.amount);
+    const amountMili = convertAmountToMili(amount);
+    onSubmit({
+      ...values,
+      amount: amountMili,
+    });
+    console.log(values)
+  };
+
+  const handleDelete = () => {
+    onDelete?.();
   };
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-5">
         <FormField
           control={form.control}
-          name="accountId"
+          name="date"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Date</FormLabel>
@@ -95,7 +106,7 @@ export const TranscationForm = ({
               <FormLabel>Account</FormLabel>
               <FormControl>
                 <Select
-                  placeholder="selecte an account"
+                  placeholder="Selecte an account"
                   options={accountOptions}
                   onCreate={onCreateAccount}
                   value={field.value}
@@ -138,6 +149,7 @@ export const TranscationForm = ({
                   disabled={disable}
                   placeholder="Add a payee"
                   {...field}
+                  value={field.value ?? ""}
                 />
               </FormControl>
               <FormMessage />
@@ -152,6 +164,7 @@ export const TranscationForm = ({
               <FormLabel>Amount</FormLabel>
               <FormControl>
                 <AmountInput
+                {...field}
                   value={field.value ?? ""}
                   onValueChange={field.onChange}
                   disable={disable}

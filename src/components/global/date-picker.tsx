@@ -15,13 +15,18 @@ import {
 import { SelectSingleEventHandler } from "react-day-picker";
 
 type Props = {
-  value?: string;
-  onChange?: SelectSingleEventHandler;
+  value?: Date;
+   onChange?: (date?: Date) => void;
   disable?: boolean;
 };
 
 export const DatePicker = ({ disable, onChange, value }: Props) => {
   const [date, setDate] = React.useState<Date>();
+
+  const handleSelect = (selectedDate: Date | undefined) => {
+    setDate(selectedDate);
+     onChange?.(selectedDate);
+  };
 
   return (
     <Popover>
@@ -36,7 +41,7 @@ export const DatePicker = ({ disable, onChange, value }: Props) => {
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-auto p-0">
-        <Calendar mode="single" selected={date} onSelect={setDate} />
+        <Calendar mode="single" selected={date} onSelect={handleSelect} />
       </PopoverContent>
     </Popover>
   );
