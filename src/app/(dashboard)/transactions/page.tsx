@@ -11,10 +11,15 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useNewtransaction } from "@/features/transcations/hooks/use-new-transaction";
 import { useBulkDeleteTrancations } from "@/features/transcations/api/use-bulk-delete";
 import { useGetTranscations } from "@/features/transcations/api/use-get-transcations";
+import { useSearchParams } from "next/navigation";
 
 const Page = () => {
+  const params = useSearchParams();
+  const from = params.get("from") || "";
+  const to = params.get("to") || "";
+  const accountId = params.get("accountid") || "";
   const { isOpen, onOpen } = useNewtransaction();
-  const TransactionQuery = useGetTranscations();
+  const TransactionQuery = useGetTranscations(from, to, accountId);
   const deleteTranscations = useBulkDeleteTrancations();
   const transactions = TransactionQuery.data || [];
 
@@ -61,18 +66,16 @@ const Page = () => {
           </Button>
         </CardHeader>
         <CardContent>
-          <Suspense fallback={<Skeleton className="h-40 w-full" />}>
-            <DataTable
-              disable={isDisable}
-              onDelete={(row) => {
-                const ids = row.map((r) => r.original.id);
-                deleteTranscations.mutate({ json: { ids } });
-              }}
-              filterKey="date"
-              columns={columns}
-              data={transactions}
-            />
-          </Suspense>
+          <DataTable
+            disable={isDisable}
+            onDelete={(row) => {
+              const ids = row.map((r) => r.original.id);
+              deleteTranscations.mutate({ json: { ids } });
+            }}
+            filterKey="date"
+            columns={columns}
+            data={transactions}
+          />
         </CardContent>
       </Card>
     </div>
