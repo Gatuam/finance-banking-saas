@@ -14,7 +14,7 @@ import {
 
 type Props = {
   value?: Date;
-   onChange?: (date?: Date) => void;
+  onChange?: (date?: Date) => void;
   disable?: boolean;
 };
 
@@ -23,7 +23,7 @@ export const DatePicker = ({ disable, onChange, value }: Props) => {
 
   const handleSelect = (selectedDate: Date | undefined) => {
     setDate(selectedDate);
-     onChange?.(selectedDate);
+    onChange?.(selectedDate);
   };
 
   return (

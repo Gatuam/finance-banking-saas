@@ -112,8 +112,7 @@ export function DataTable<TData, TValue>({
             variant={"destructive"}
           >
             <Trash className=" size-4" />
-            Delete{", "}
-            {table.getFilteredRowModel().rows.length}
+            Delete
           </Button>
         )}
 

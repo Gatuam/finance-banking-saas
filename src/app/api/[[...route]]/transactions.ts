@@ -26,8 +26,8 @@ const app = new Hono()
     ),
     async (c) => {
       const { from, to, accountId } = c.req.valid("query");
-      const auth = getAuth(c);
-      if (!auth?.userId) {
+      const user = await currentUser();
+      if (!user?.id) {
         return c.json(
           {
             error: "Unauthorized",
@@ -61,7 +61,7 @@ const app = new Hono()
         .where(
           and(
             accountId ? eq(transcations.accountId, accountId) : undefined,
-            eq(account.userId, auth.userId),
+            eq(account.userId, user.id),
             gte(transcations.date, startDate),
             lte(transcations.date, endDate)
           )
