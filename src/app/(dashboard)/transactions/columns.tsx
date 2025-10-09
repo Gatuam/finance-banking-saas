@@ -10,6 +10,7 @@ import { client } from "@/lib/hono";
 import { Actions } from "./action";
 import { format } from "date-fns";
 import { convertMiliToAmount, formatCurrency } from "@/lib/utils";
+import { Badge } from "@/components/ui/badge";
 
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
@@ -110,9 +111,12 @@ export const columns: ColumnDef<ResponseType>[] = [
       const amount = parseFloat(row.getValue("amount"));
       const value = convertMiliToAmount(amount);
       return (
-        <span>
+        <Badge
+          variant={value < 0 ? "destructive" : "default"}
+          className=" text-xs cursor-pointer"
+        >
           {formatCurrency(value)}
-        </span>
+        </Badge>
       );
     },
   },
