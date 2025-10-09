@@ -1,5 +1,6 @@
 "use client";
-import React from "react";
+
+import React, { Suspense } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Loader, PlusIcon } from "lucide-react";
@@ -46,40 +47,35 @@ const Page = () => {
       </div>
     );
   }
+
   return (
-    <>
-      <div className="max-w-screen-2xl mx-auto w-full pb-10 -mt-35 ">
-        <Card className=" border-none border-0 drop-shadow-md">
-          <CardHeader className="  gap-y-2 lg:flex lg:items-center lg:justify-between">
-            <CardTitle className=" text-xl line-clamp-1 text-center">
-              Transcation History
-            </CardTitle>
-            <Button
-              onClick={() => {
-                onOpen();
-              }}
-              className=" text-accent"
-            >
-              <PlusIcon className=" size-4" />
-              Add new
-            </Button>
-          </CardHeader>
-          <CardContent>
+    <div className="max-w-screen-2xl mx-auto w-full pb-10 -mt-35 ">
+      <Card className=" border-none border-0 drop-shadow-md">
+        <CardHeader className="  gap-y-2 lg:flex lg:items-center lg:justify-between">
+          <CardTitle className=" text-xl line-clamp-1 text-center">
+            Transaction History
+          </CardTitle>
+          <Button onClick={onOpen} className=" text-accent">
+            <PlusIcon className=" size-4" />
+            Add new
+          </Button>
+        </CardHeader>
+        <CardContent>
+          <Suspense fallback={<Skeleton className="h-40 w-full" />}>
             <DataTable
               disable={isDisable}
               onDelete={(row) => {
                 const ids = row.map((r) => r.original.id);
                 deleteTranscations.mutate({ json: { ids } });
               }}
-              filterKey={"date"}
+              filterKey="date"
               columns={columns}
               data={transactions}
             />
-          </CardContent>
-        </Card>
-      </div>
-      <div></div>
-    </>
+          </Suspense>
+        </CardContent>
+      </Card>
+    </div>
   );
 };
 
