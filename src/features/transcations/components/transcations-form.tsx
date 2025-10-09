@@ -72,7 +72,7 @@ export const TranscationForm = ({
       ...values,
       amount: amountMili,
     });
-    console.log(values)
+    console.log(values);
   };
 
   const handleDelete = () => {
@@ -164,7 +164,7 @@ export const TranscationForm = ({
               <FormLabel>Amount</FormLabel>
               <FormControl>
                 <AmountInput
-                {...field}
+                  {...field}
                   value={field.value ?? ""}
                   onValueChange={field.onChange}
                   disable={disable}
@@ -197,7 +197,7 @@ export const TranscationForm = ({
 
         <div className=" space-y-2">
           <Button disabled={disable} className=" w-full" type="submit">
-            {id ? "Save Changes" : "Create account"}
+            {id ? "Save Changes" : "Create Transactions"}
           </Button>
           {!!id && (
             <Button
@@ -208,7 +208,7 @@ export const TranscationForm = ({
               type="button"
             >
               <Trash />
-              Delete account
+              Delete Transactions
             </Button>
           )}
         </div>

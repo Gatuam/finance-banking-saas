@@ -55,7 +55,6 @@ export const NewTranscationSheet = () => {
     mutation.mutate(values, {
       onSuccess: () => {
         onClose();
-        toast.success("Created");
       },
     });
   };

@@ -6,19 +6,20 @@ import { Loader, PlusIcon } from "lucide-react";
 import { columns } from "./columns";
 import { DataTable } from "@/components/global/data-table";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useGetCategories } from "@/features/categories/api/use-get-categories";
+
 import { useNewtransaction } from "@/features/transcations/hooks/use-new-transaction";
 import { useBulkDeleteTrancations } from "@/features/transcations/api/use-bulk-delete";
+import { useGetTranscations } from "@/features/transcations/api/use-get-transcations";
 
 const Page = () => {
   const { isOpen, onOpen } = useNewtransaction();
-  const categoryQuery = useGetCategories();
-  const deleteCategory = useBulkDeleteTrancations();
-  const categories = categoryQuery.data || [];
+  const TransactionQuery = useGetTranscations();
+  const deleteTranscations = useBulkDeleteTrancations();
+  const transactions = TransactionQuery.data || [];
 
-  const isDisable = categoryQuery.isLoading || deleteCategory.isPaused;
+  const isDisable = TransactionQuery.isLoading || deleteTranscations.isPaused;
 
-  if (categoryQuery.isLoading) {
+  if (TransactionQuery.isLoading) {
     return (
       <div className="max-w-screen-2xl mx-auto w-full pb-10 -mt-35 ">
         <Card className=" border-none border-0 drop-shadow-md">
@@ -68,11 +69,11 @@ const Page = () => {
               disable={isDisable}
               onDelete={(row) => {
                 const ids = row.map((r) => r.original.id);
-                deleteCategory.mutate({ json: { ids } });
+                deleteTranscations.mutate({ json: { ids } });
               }}
-              filterKey={"name"}
+              filterKey={"date"}
               columns={columns}
-              data={categories}
+              data={transactions}
             />
           </CardContent>
         </Card>
